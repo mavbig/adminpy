@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+
+<body class="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-banner text-center">
+                    <h1><i class="fa fa-gears"></i> MonitorizePy</h1>
+                </div>
+                <div class="portlet portlet-green">
+                    <div class="portlet-heading login-heading">
+                        <div class="portlet-title">
+                            <h4><strong>Forgot Password of MonitorizePy?</strong></h4>
+                            <p>Please enter your Username below so we can send you a reset link!</p>
+                        </div>
+                        <!-- begin NEW USER FUNCTION DISABLED
+                        <div class="portlet-widgets">
+                            <button class="btn btn-white btn-xs"><i class="fa fa-plus-circle"></i> New User</button>
+                        </div>
+                        end NEW USER FUNCTION DISABLED -->
+                        <div class="clearfix"></div>
+
+                    </div>
+                    <div class="portlet-body">
+                        <form accept-charset="UTF-8" role="form" action= "/forgot" method="POST">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Enter your Username.." name="username" type="text" value="{{ username }}">
+                                </div>
+                                <!--    begin REMEMBER FUNCTION DISABLED
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                                    </label>
+                                </div>
+                                        end REMEMBER FUNCTION DISABLED -->
+                                <br>
+                                <button type="submit" class="btn btn-lg btn-green btn-block">Recover Password</button>
+                                <!--<a href="index.html" class="btn btn-lg btn-green btn-block">Sign In</a>-->
+                            </fieldset>
+                            <br>
+                            <p class="small">
+                                <a href="/login">Already Registered? Login Here!</a>
+                            </p>
+                            <p class="small">
+                                <a href="/signup">Not Registered? Signup!</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
