@@ -20,3 +20,7 @@ def valid_email(email):
         return  email
     #return not email or EMAIL_RE.match(email)
 
+NAME_RE = re.compile(r"^[a-zA-Z0-9_-]{2,50}$")
+def valid_name(name):
+    if NAME_RE.match(name):
+        return name

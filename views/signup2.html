@@ -26,28 +26,66 @@
                     <div class="portlet-body">
                         <form accept-charset="UTF-8" role="form" action= "/signup" method="POST">
                             <fieldset>
+                                {% if error_username %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Username" name="username" type="text" value="">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_username }}!</span>
+                                </div>
+                                {% else %}
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Username" name="username" type="text" value="{{ username }}">
                                 </div>
-                                {% if failed %}
+                                {% endif %}
+                                {% if error_password %}
                                 <div class="form-group has-error">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" autofocus="">
-                                    <span class="help-block"><i class='fa fa-warning'></i> Invalid Password!</span>
+                                    <input class="form-control" placeholder="Password" name="password" type="password">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_password }}!</span>
                                 </div>
                                 {% else %}
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Password" name="password" type="password">
                                 </div>
                                 {% endif %}
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="E-Mail" name="email" type="text" value="{{ email }}">
+                                {% if error_verify %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Verify" name="verify" type="password">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_verify }}!</span>
                                 </div>
+                                {% else %}
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Last Name" name="lastname" type="text" value="{{ lastname }}">
+                                    <input class="form-control" placeholder="Verify" name="verify" type="password">
                                 </div>
+                                {% endif %}
+                                {% if error_email %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="E-Mail (optional)" name="email" type="text" value="">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_email }}!</span>
+                                </div>
+                                {% else %}
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="E-Mail (optional)" name="email" type="text" value="{{ email }}">
+                                </div>
+                                {% endif %}
+                                {% if error_last_name %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Last Name" name="lastname" type="text" value="">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_last_name }}!</span>
+                                </div>
+                                {% else %}
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Last Name" name="lastname" type="text" value="{{ last_name }}">
+                                </div>
+                                {% endif %}
+                                {% if error_name %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Name" name="name" type="text" value="">
+                                    <span class="help-block"><i class='fa fa-warning'></i> {{ error_name }}!</span>
+                                </div>
+                                {% else %}
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Name" name="name" type="text" value="{{ name }}">
                                 </div>
+                                {% endif %}
                                 <!--    begin REMEMBER FUNCTION DISABLED
                                 <div class="checkbox">
                                     <label>

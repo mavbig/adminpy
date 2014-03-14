@@ -6,6 +6,7 @@ from google.appengine.ext import ndb
 import logging
 import os.path
 import webapp2
+import misc
 
 from webapp2_extras import auth
 from webapp2_extras import sessions
@@ -76,7 +77,7 @@ class BaseHandler(webapp2.RequestHandler):
             params = {}
         user = self.user_info
         params['user'] = user
-        logging.info(params)
+        #logging.info(params)
         path = os.path.join(os.path.dirname(__file__), 'views', view_filename)
         self.response.out.write(template.render(path, params))
 
@@ -106,38 +107,84 @@ class MainHandler(BaseHandler):
 
 class SignupHandler(BaseHandler):
     def get(self):
-        parms = {'title': "Signup"}
-        self.render_template('signup2.html', parms)
+        params = {'title': "Signup"}
+        self.render_template('signup2.html', params)
 
     def post(self):
+        params = {}
+        params['title'] = "Signup"
+        have_error = False
         user_name = self.request.get('username')
         email = self.request.get('email')
         name = self.request.get('name')
         password = self.request.get('password')
+        verify = self.request.get('verify')
         last_name = self.request.get('lastname')
 
-        unique_properties = ['email_address']
-        user_data = self.user_model.create_user(user_name,
-            unique_properties,
-            email_address=email, name=name, password_raw=password,
-            last_name=last_name, verified=False)
-        if not user_data[0]: #user_data is a tuple
-            self.display_message('Unable to create user for email %s because of \
-            duplicate keys %s' % (user_name, user_data[1]))
-            return
-    
-        user = user_data[1]
-        user_id = user.get_id()
 
-        token = self.user_model.create_signup_token(user_id)
+        if not misc.valid_username(user_name):
+            params['error_username'] = "Please enter a valid Username"
+            have_error = True
+        else:
+            params['username'] = user_name
 
-        verification_url = self.uri_for('verification', type='v', user_id=user_id,
-            signup_token=token, _full=True)
+        if not misc.valid_password(password):
+            params['error_password'] = "Please enter a valid Password"
+            have_error = True
+        elif not password == verify:
+            params['error_verify'] = "Passwords do not match"
+            have_error = True
 
-        msg = 'Send an email to user in order to verify their address. \
-              They will be able to do so by visiting <a href="{url}">{url}</a>'
+        if email and not misc.valid_email(email):
+            params['error_email'] = "Please enter a valid E-Mail"
+            have_error = True
 
-        self.display_message(msg.format(url=verification_url))
+        else:
+            params['email'] = email
+
+        if not misc.valid_name(name):
+            params['error_name'] = "Please enter a valid Name"
+            have_error = True
+        else:
+            params['name'] = name
+
+        if not misc.valid_name(last_name):
+            params['error_last_name'] = "Please enter a valid Last Name"
+            have_error = True
+        else:
+            params['last_name'] = last_name
+
+
+        if have_error:
+            self.render_template('signup2.html', params)
+        else:
+            unique_properties = ['email_address']
+            user_data = self.user_model.create_user(user_name,
+                unique_properties,
+                email_address=email, name=name, password_raw=password,
+                last_name=last_name, verified=False)
+            if not user_data[0]: #user_data is a tuple
+                if 'auth_id' in user_data[1]:
+                    params['error_username'] = "User with this Name already exists"
+                else:
+                    params['error_email'] = "User with this E-Mail already exists"
+                self.render_template('signup2.html', params)
+                #self.display_message('Unable to create user for email %s because of \
+                #duplicate keys %s' % (user_name, user_data[1]))
+                return
+
+            user = user_data[1]
+            user_id = user.get_id()
+
+            token = self.user_model.create_signup_token(user_id)
+
+            verification_url = self.uri_for('verification', type='v', user_id=user_id,
+                signup_token=token, _full=True)
+
+            msg = 'Send an email to user in order to verify their address. \
+                  They will be able to do so by visiting <a href="{url}">{url}</a>'
+
+            self.display_message(msg.format(url=verification_url))
 
 class ForgotPasswordHandler(BaseHandler):
     def get(self):
